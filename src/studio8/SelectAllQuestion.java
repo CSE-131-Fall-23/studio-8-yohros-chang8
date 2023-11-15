@@ -2,14 +2,40 @@ package studio8;
 
 public class SelectAllQuestion extends MultipleChoiceQuestion {
 
+	private int totalPoints;
+	
 	public SelectAllQuestion(String prompt, String answer, String[] choices) {
-		//Hint: 1 point per choice
-		//FIXME
+		// Calls MultipleChoice constructor, 1 point per choice
+		super(prompt, answer, 1, choices);
+		
+		totalPoints = choices.length;
 	}
 	
+	
 	public int checkAnswer(String givenAnswer) {
-		//FIXME Should return partial credit (if earned)!
-		return 0;
+		// Return partial credit (if earned)!
+		int lostPoints = 0;
+		
+		// Convert given answer to charArray to compare to actual answer
+		char[] array = givenAnswer.toCharArray();
+		
+		// Deduct a point for every wrong answer
+		for (int i = 0; i < array.length; i++) {	
+			if (!(this.getAnswer().contains(array[i] + ""))) { 
+				lostPoints++;
+			} 
+		}
+		
+		// Deduct a point for every unmarked correct answer
+		char[] correct = this.getAnswer().toCharArray();
+		
+		for (int i = 0; i < correct.length; i++) { 
+			if (!(givenAnswer.contains(correct[i] + ""))) {
+				lostPoints++;
+			}
+		}
+		
+		return totalPoints - lostPoints;
 	}
 	
 	public static void main(String[] args) {
